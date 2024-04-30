@@ -3,16 +3,17 @@
   <div class="px-3 py-10 md:px-10">
       <div class="w-full sm:w-1/2 lg:w-1/3 mx-auto">
        
-
          <TodoSpinner v-if="loading"/>
         
             <template v-else>
                 
                 <TodoFormAdd />
                 
-                <TodoItems />
+                <TodoItems 
+                    v-if="$store.state.todos.length"
+                />
         
-                <TodoEmpty />
+                <TodoEmpty v-else />
                 
             </template>
       </div>
@@ -25,7 +26,7 @@ import TodoSpinner from './components/TodoSpinner.vue'
 import TodoFormAdd from './components/TodoFormAdd.vue';
 import TodoItems from './components/TodoItems.vue';
 import TodoEmpty from './components/TodoEmpty.vue';
-import axios from 'axios';
+
 
 
 
@@ -41,14 +42,8 @@ name: 'App',
     },
 
     created(){ //fase ideal para fazer o setup do nosso componente.
-
         this.loading = true
-        axios.get('http://localhost:3000/todos')
-        .then((response) => {
-            this.$store.commit('storeTodos', response.data)
-            
-        })
-        .finally(() => {
+        this.$store.dispatch('getTodos').finally(() => {
             this.loading = false
         })
 
@@ -65,6 +60,6 @@ font-family: Avenir, Helvetica, Arial, sans-serif;
 -moz-osx-font-smoothing: grayscale;
 text-align: center;
 color: #2c3e50;
-margin-top: 60px;
+margin-top: 100px;
 }
 </style>
